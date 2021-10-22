@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class OpenCVTest : MonoBehaviour
 {
-    public int port = 1;
+    public int port = 0;
 
     private bool _ready;
 
@@ -43,12 +43,12 @@ public class OpenCVTest : MonoBehaviour
 // Define the functions which can be called from the .dll.
 internal static class OpenCVInterop
 {
-    [DllImport("OpenCVArUco")]
+    [DllImport("CalibrationCamera")]
     internal static extern int Init(ref int capturePort);
 
-    [DllImport("OpenCVArUco")]
+    [DllImport("CalibrationCamera")]
     internal static extern int Close();
 
-    [DllImport("OpenCVArUco")]
+    [DllImport("CalibrationCamera")]
     internal static extern void Detect();
 }
