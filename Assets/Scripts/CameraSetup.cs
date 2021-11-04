@@ -25,8 +25,8 @@ public class CameraSetup : MonoBehaviour
     private bool panYDir = false;
     private bool panZDir = false;
 
-    public float zoomSensitivity = 0.05f; //focal length per frame
-    public float panSensitivity = 0.1f; //vector angle per frame
+    public float zoomSensitivity = 0.01f; //focal length per frame
+    public float panSensitivity = 0.05f; //vector angle per frame
 
     // Update is called once per frame
     void Update()
@@ -40,27 +40,27 @@ public class CameraSetup : MonoBehaviour
         }
         if (panX)
         {
-            if (panXDir) //true for left, increase X value
+            if (panXDir) //true for left, rotate along Y axis to pan in X direction
             {
-                Vector3 newAngle = new Vector3(cam.transform.eulerAngles.x + panSensitivity, cam.transform.eulerAngles.y, cam.transform.eulerAngles.z);
+                Vector3 newAngle = new Vector3(cam.transform.eulerAngles.x, cam.transform.eulerAngles.y - panSensitivity, cam.transform.eulerAngles.z);
                 cam.transform.eulerAngles = newAngle;
             }
             else
             {
-                Vector3 newAngle = new Vector3(cam.transform.eulerAngles.x - panSensitivity, cam.transform.eulerAngles.y, cam.transform.eulerAngles.z);
+                Vector3 newAngle = new Vector3(cam.transform.eulerAngles.x, cam.transform.eulerAngles.y + panSensitivity, cam.transform.eulerAngles.z);
                 cam.transform.eulerAngles = newAngle;
             }
         }
         if (panY)
         {
-            if (panXDir) //true for up, increase Y value
+            if (panXDir) //true for up, rotate along X axis to pan in Y direction
             {
-                Vector3 newAngle = new Vector3(cam.transform.eulerAngles.x, cam.transform.eulerAngles.y + panSensitivity, cam.transform.eulerAngles.z);
+                Vector3 newAngle = new Vector3(cam.transform.eulerAngles.x - panSensitivity, cam.transform.eulerAngles.y, cam.transform.eulerAngles.z);
                 cam.transform.eulerAngles = newAngle;
             }
             else
             {
-                Vector3 newAngle = new Vector3(cam.transform.eulerAngles.x, cam.transform.eulerAngles.y - panSensitivity, cam.transform.eulerAngles.z);
+                Vector3 newAngle = new Vector3(cam.transform.eulerAngles.x + panSensitivity, cam.transform.eulerAngles.y, cam.transform.eulerAngles.z);
                 cam.transform.eulerAngles = newAngle;
             }
         }
@@ -68,12 +68,12 @@ public class CameraSetup : MonoBehaviour
         {
             if (panXDir) //true for clockwise, increase Z value
             {
-                Vector3 newAngle = new Vector3(cam.transform.eulerAngles.x, cam.transform.eulerAngles.y, cam.transform.eulerAngles.z + panSensitivity);
+                Vector3 newAngle = new Vector3(cam.transform.eulerAngles.x, cam.transform.eulerAngles.y, cam.transform.eulerAngles.z - panSensitivity);
                 cam.transform.eulerAngles = newAngle;
             }
             else
             {
-                Vector3 newAngle = new Vector3(cam.transform.eulerAngles.x, cam.transform.eulerAngles.y, cam.transform.eulerAngles.z- panSensitivity);
+                Vector3 newAngle = new Vector3(cam.transform.eulerAngles.x, cam.transform.eulerAngles.y, cam.transform.eulerAngles.z + panSensitivity);
                 cam.transform.eulerAngles = newAngle;
             }
         }
