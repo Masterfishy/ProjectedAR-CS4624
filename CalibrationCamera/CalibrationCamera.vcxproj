@@ -142,7 +142,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(OPENCV_DIR)\lib\Debug;$(OPENCV_DIR)\lib\Release;</AdditionalLibraryDirectories>
-      <AdditionalDependencies>opencv_core453d.lib;opencv_core453.lib;opencv_highgui453d.lib;opencv_highgui453.lib;opencv_aruco453d.lib;opencv_aruco453.lib;opencv_videoio453d.lib;opencv_videoio453.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opencv_core453d.lib;opencv_core453.lib;opencv_highgui453d.lib;opencv_highgui453.lib;opencv_aruco453d.lib;opencv_aruco453.lib;opencv_videoio453d.lib;opencv_videoio453.lib;opencv_imgproc453d.lib;opencv_imgproc453.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
