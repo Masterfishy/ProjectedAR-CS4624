@@ -42,31 +42,31 @@ public class CameraSetup : MonoBehaviour
         {
             if (panXDir) //true for left, rotate along Y axis to pan in X direction
             {
-                Vector3 newAngle = new Vector3(cam.transform.eulerAngles.x, cam.transform.eulerAngles.y - panSensitivity, cam.transform.eulerAngles.z);
+                Vector3 newAngle = new Vector3(cam.transform.eulerAngles.x, cam.transform.eulerAngles.y + panSensitivity, cam.transform.eulerAngles.z);
                 cam.transform.eulerAngles = newAngle;
             }
             else
             {
-                Vector3 newAngle = new Vector3(cam.transform.eulerAngles.x, cam.transform.eulerAngles.y + panSensitivity, cam.transform.eulerAngles.z);
+                Vector3 newAngle = new Vector3(cam.transform.eulerAngles.x, cam.transform.eulerAngles.y - panSensitivity, cam.transform.eulerAngles.z);
                 cam.transform.eulerAngles = newAngle;
             }
         }
         if (panY)
         {
-            if (panXDir) //true for up, rotate along X axis to pan in Y direction
+            if (panYDir) //true for up, rotate along X axis to pan in Y direction
             {
-                Vector3 newAngle = new Vector3(cam.transform.eulerAngles.x - panSensitivity, cam.transform.eulerAngles.y, cam.transform.eulerAngles.z);
+                Vector3 newAngle = new Vector3(cam.transform.eulerAngles.x + panSensitivity, cam.transform.eulerAngles.y, cam.transform.eulerAngles.z);
                 cam.transform.eulerAngles = newAngle;
             }
             else
             {
-                Vector3 newAngle = new Vector3(cam.transform.eulerAngles.x + panSensitivity, cam.transform.eulerAngles.y, cam.transform.eulerAngles.z);
+                Vector3 newAngle = new Vector3(cam.transform.eulerAngles.x - panSensitivity, cam.transform.eulerAngles.y, cam.transform.eulerAngles.z);
                 cam.transform.eulerAngles = newAngle;
             }
         }
         if (panZ)
         {
-            if (panXDir) //true for clockwise, increase Z value
+            if (panZDir) //true for clockwise, increase Z value
             {
                 Vector3 newAngle = new Vector3(cam.transform.eulerAngles.x, cam.transform.eulerAngles.y, cam.transform.eulerAngles.z - panSensitivity);
                 cam.transform.eulerAngles = newAngle;
@@ -108,22 +108,22 @@ public class CameraSetup : MonoBehaviour
     public void centerShotgun(int id)
     {
         //convert id to 0 based first, starting ID in the shotgun marker matrix is 4
-        id -= 4;
+        id -=4;
         int row = id / 5; //5x5 matrix starting at top left and going down
-        int col = id % 5; 
+        int col = id % 5;
 
-        if(row != 3)
+        if (col != 2)
         {
-            panXControl(true, row < 3); //less than 3 means go to the left, panX control takes true to go to the left
+            panXControl(true, col < 2); //less than 3 means go to the left, panX control takes true to left
         }
         else
         {
             panXControl(false, false); //stop panning X
         }
 
-        if (col != 3)
+        if (row != 2)
         {
-            panYControl(true, col < 3); //less than 3 means go up, panY control takes true to go up
+            panYControl(true, row < 2); //less than 3 means go up, panY control takes true to go up
         }
         else
         {
