@@ -81,104 +81,7 @@ int main()
 				std::cout << "Phys Dist: " << physicalDistance << "\nVirt Dist: " << virtualDistance << "\nDiff: " << diff << std::endl;
 			}
 
-			cv::aruco::drawDetectedMarkers(imageCopy, corners, ids);
-			//0 to 3
-			/*
-			* Calculate movement on X
-			* 
-			* Bottom right marker and top right marker
-			*
-			* moveXamt = abs(topRightId0.x - topRightId3.x)
-			*/
-
-			/*cv::Point2f topRightId0 = sortedCorners[0][1];
-			cv::Point2f topRightId3 = sortedCorners[3][1];
-
-			cv::line(imageCopy, topRightId0, topRightId3, cv::Scalar(0, 0, 255), 1);
-			dist = calculateDist(topRightId3.x, topRightId3.y, topRightId0.x, topRightId0.y);
-			std::cout << dist << "px" << std::endl;*/
-
-			
-
-			/*
-			* Calculate movement on Y
-			* 
-			* Top left marker and top right marker
-			* 
-			* moveYamt = abs(bottomRightId1.y - bottomRightId3.y)
-			*/
-			
-			/*cv::Point2f bottomRightId1 = sortedCorners[1][2];
-			cv::Point2f bottomRightId3 = sortedCorners[3][2];
-
-			cv::line(imageCopy, bottomRightId1, bottomRightId3, cv::Scalar(0, 0, 255), 1);
-			dist = calculateDist(bottomRightId3.x, bottomRightId3.y, bottomRightId1.x, bottomRightId1.y);
-			std::cout << dist << "px" << std::endl;*/
-
-			
-			/*std::string distText = std::to_string(dist) + " px.";
-			cv::Point2f midpoint = findMidpoint(topRightId0, topRightId3);
-
-			cv::putText(imageCopy, distText, midpoint, cv::FONT_HERSHEY_PLAIN, 1, cv::Scalar(0, 0, 255), 1, true);*/
-
-
-			//cv::Point2f topLeftId0 = sortedCorners[0][0];
-			//cv::Point2f topLeftId3 = sortedCorners[3][0];
-
-			//cv::line(imageCopy, topLeftId0, topLeftId3, cv::Scalar(0, 0, 255), 1);
-			//dist = calculateDist(topLeftId3.x, topLeftId3.y, topLeftId0.x, topLeftId0.y);
-			//std::cout << dist << "px" << std::endl;
-
-			/*distText = std::to_string(dist) + " px.";
-			midpoint = findMidpoint(topLeftId0, topLeftId3);
-
-			cv::putText(imageCopy, distText, midpoint, cv::FONT_HERSHEY_PLAIN, 1, cv::Scalar(0, 0, 255), 1, true);*/
-
-
-			/*
-			* Top left marker and top right marker
-			*
-			* moveYamt = abs(bottomRightId1.y - bottomRightId3.y)
-			*/
-			//cv::Point2f topRightId1 = sortedCorners[1][1];
-			////cv::Point2f topRightId3 = sortedCorners[3][1];
-
-			//cv::line(imageCopy, topRightId1, topRightId3, cv::Scalar(0, 0, 255), 1);
-			//dist = calculateDist(topRightId3.x, topRightId3.y, topRightId1.x, topRightId1.y);
-			//std::cout << dist << "px" << std::endl;
-
-			/*distText = std::to_string(dist) + " px.";
-			midpoint = findMidpoint(topRightId1, topRightId3);*/
-
-
-
-			/*cv::aruco::drawDetectedMarkers(imageCopy, corners, ids);
-
-			cv::line(imageCopy, sortedCorners[0][0], sortedCorners[1][2], cv::Scalar(0, 0, 255), 1);
-			dist = calculateDist(sortedCorners[0][0].x, sortedCorners[0][0].y, sortedCorners[1][2].x, sortedCorners[1][2].y);
-			std::cout << dist << "px" << std::endl;
-
-			std::string distText = std::to_string(dist) + " px.";
-			cv::Point2f midpoint = findMidpoint(sortedCorners[0][0], sortedCorners[1][2]);
-
-			cv::putText(imageCopy, distText, midpoint, cv::FONT_HERSHEY_PLAIN, 1, cv::Scalar(0, 0, 255), 1, true);*/
-		}
-		/*bool aruco0and1 = std::find(ids.begin(), ids.end(), 0) != ids.end() && std::find(ids.begin(), ids.end(), 1) != ids.end();
-
-		double dist = -1.0;
-		if (ids.size() > 1 && aruco0and1)
-		{
-			cv::aruco::drawDetectedMarkers(imageCopy, corners, ids);
-
-			cv::line(imageCopy, sortedCorners[0][0], sortedCorners[1][2], cv::Scalar(0, 0, 255), 1);
-			double dist = calculateDist(sortedCorners[0][0].x, sortedCorners[0][0].y, sortedCorners[1][2].x, sortedCorners[1][2].y);
-			std::cout << dist << "px" << std::endl;
-
-			std::string distText = std::to_string(dist) + " px.";
-			cv::Point2f midpoint = findMidpoint(sortedCorners[0][0], sortedCorners[1][2]);
-
-			cv::putText(imageCopy, distText, midpoint, cv::FONT_HERSHEY_PLAIN, 1, cv::Scalar(0, 0, 255), 1, true);
-		}*/
+		cv::aruco::drawDetectedMarkers(imageCopy, corners, ids);
 
 		cv::imshow("out", imageCopy);
 		char key = (char)cv::waitKey(0);
@@ -526,84 +429,6 @@ extern "C" double __declspec(dllexport) __stdcall ScaleDifference()
 	return 0;
 }
 
-extern "C" double __declspec(dllexport) __stdcall TopCornerOffset()
-{
-	_capture.grab();
-
-	cv::Mat image, imageCopy;
-	_capture.retrieve(image);
-	image.copyTo(imageCopy);
-
-	std::vector<int> ids;
-	std::vector<std::vector<cv::Point2f>> corners;
-	cv::aruco::detectMarkers(image, _dictionary, corners, ids);
-
-	// If at least one marker is detected
-	if (ids.size() > 0)
-	{
-		// See if markers 0, 1, and 16 are being seen
-		auto itr0 = std::find(ids.begin(), ids.end(), 0);
-		auto itr1 = std::find(ids.begin(), ids.end(), 1);
-		auto itr16 = std::find(ids.begin(), ids.end(), 16);
-
-		if (itr0 != ids.end() && itr1 != ids.end() && itr16 != ids.end())
-		{
-			int indexOfMarker0 = itr0 - ids.begin();
-			int indexOfMarker1 = itr1 - ids.begin();
-			int indexOfMarker16 = itr16 - ids.begin();
-
-			std::vector<cv::Point2f> marker0 = corners[indexOfMarker0];
-			std::vector<cv::Point2f> marker1 = corners[indexOfMarker1];
-			std::vector<cv::Point2f> marker16 = corners[indexOfMarker16];
-
-			cv::Point2f midpoint = findMidpoint(marker0[1], marker1[1]);
-
-			return (double)marker16[1].y - (double)midpoint.y;
-		}
-	}
-
-	return 0;
-}
-
-extern "C" double __declspec(dllexport) __stdcall BotCornerOffset()
-{
-	_capture.grab();
-
-	cv::Mat image, imageCopy;
-	_capture.retrieve(image);
-	image.copyTo(imageCopy);
-
-	std::vector<int> ids;
-	std::vector<std::vector<cv::Point2f>> corners;
-	cv::aruco::detectMarkers(image, _dictionary, corners, ids);
-
-	// If at least one marker is detected
-	if (ids.size() > 0)
-	{
-		// See if markers 0, 1, and 16 are being seen
-		auto itr0 = std::find(ids.begin(), ids.end(), 0);
-		auto itr1 = std::find(ids.begin(), ids.end(), 1);
-		auto itr16 = std::find(ids.begin(), ids.end(), 16);
-
-		if (itr0 != ids.end() && itr1 != ids.end() && itr16 != ids.end())
-		{
-			int indexOfMarker0 = itr0 - ids.begin();
-			int indexOfMarker1 = itr1 - ids.begin();
-			int indexOfMarker16 = itr16 - ids.begin();
-
-			std::vector<cv::Point2f> marker0 = corners[indexOfMarker0];
-			std::vector<cv::Point2f> marker1 = corners[indexOfMarker1];
-			std::vector<cv::Point2f> marker16 = corners[indexOfMarker16];
-
-			cv::Point2f midpoint = findMidpoint(marker0[3], marker1[3]);
-
-			return (double)midpoint.y - (double)marker16[3].y;
-		}
-	}
-
-	return 0;
-}
-
 extern "C" int __declspec(dllexport) __stdcall GetSeenId()
 {
 	_capture.grab();
@@ -632,3 +457,5 @@ extern "C" int __declspec(dllexport) __stdcall GetSeenId()
 	marker = min;
 	return min;
 }
+
+

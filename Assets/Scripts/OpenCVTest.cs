@@ -9,6 +9,8 @@ public class OpenCVTest : MonoBehaviour
 {
     public int port = 0;
     public CameraSetup cameraCtrl;
+    public double panThreshold = 0.0;
+    public double zoomThreshold = 0.0;
 
     private bool _ready = false;
     private bool _finishedCenteringShotgun = false;
@@ -54,23 +56,27 @@ public class OpenCVTest : MonoBehaviour
 
         if (!_finishedCentering)
         {
+            double xRes = OpenCVInterop.xOffset();
+            double yRes = OpenCVInterop.yOffset();
+            double scaleDif = OpenCVInterop.ScaleDifference();
+
             if (doPan)
             {
-                double xRes = OpenCVInterop.xOffset();
-                double yRes = OpenCVInterop.yOffset();
+                Debug.Log("Pan pls");
 
                 float distance = Mathf.Sqrt((float)(xRes * xRes + yRes * yRes));
-                if(distance < 100)
+                if(distance < 10)
                 {
                     cameraCtrl.panSensitivity = 0.01f;
                 }
+
                 // If xRes is negative, marker 0 is right of marker 3
-                if (xRes > 0)
+                if (xRes > panThreshold)
                 {
                     // Go left
                     cameraCtrl.panXControl(true, true);
                 }
-                else if (xRes < 0)
+                else if (xRes < -panThreshold)
                 {
                     // Go right
                     cameraCtrl.panXControl(true, false);
@@ -81,15 +87,14 @@ public class OpenCVTest : MonoBehaviour
                     Debug.Log("Stop panning X");
                     cameraCtrl.panXControl(false, false);
                 }
-
                
                 // If yRes is negative, marker 1 is below marker 3
-                if (yRes > 0)
+                if (yRes > panThreshold)
                 {
                     // Go up
                     cameraCtrl.panYControl(true, true);
                 }
-                else if (yRes < 0)
+                else if (yRes < -panThreshold)
                 {
                     // Go down
                     cameraCtrl.panYControl(true, false);
@@ -101,23 +106,26 @@ public class OpenCVTest : MonoBehaviour
                     cameraCtrl.panYControl(false, false);
                 }
 
-                doPan = !(xRes == 0 && yRes == 0);
+                doPan = !(WithinThreshold(xRes, panThreshold) && WithinThreshold(yRes, panThreshold));
             }
 
             if (!doPan)
             {
-                double scaleDif = OpenCVInterop.ScaleDifference();
-                if(Mathf.Abs(scaleDif) < 10)
+                Debug.Log("Zoom pls");
+
+                if(Mathf.Abs((float)scaleDif) < 2)
                 {
                     cameraCtrl.zoomSensitivity = 0.01f;
                 }
 
-                if (scaleDif > 0)
+                if (scaleDif > zoomThreshold)
                 {
+                    // Zoom in
                     cameraCtrl.zoomControl(true, true);
                 }
-                else if (scaleDif < 0)
+                else if (scaleDif < -zoomThreshold)
                 {
+                    // Zoom out
                     cameraCtrl.zoomControl(true, false);
                 }
                 else
@@ -127,25 +135,14 @@ public class OpenCVTest : MonoBehaviour
                 }
 
                 Debug.Log("Scale Diff: " + scaleDif);
-                doPan = scaleDif == 0;
+                doPan = WithinThreshold(scaleDif, zoomThreshold);
             }
 
-            //double botRes = OpenCVInterop.BotCornerOffset();
-            //if (botRes > 0)
-            //{
-            //    cameraCtrl.zoomControl(true, true);
-            //}
-            //else if (botRes < 0)
-            //{
-            //    cameraCtrl.zoomControl(true, false);
-            //}
-            //else
-            //{
-            //    Debug.Log("Stop zooming");
-            //    cameraCtrl.zoomControl(false, false);
-            //}
-
-            //_finishedCentering = xRes == 0 && yRes == 0;
+            _finishedCentering = WithinThreshold(scaleDif, zoomThreshold) && WithinThreshold(xRes, panThreshold) && WithinThreshold(yRes, panThreshold);
+        }
+        else
+        {
+            Debug.Log("Yuh, calibrated");
         }
         #endregion
     }
@@ -190,6 +187,12 @@ public class OpenCVTest : MonoBehaviour
         }
 
         _ready = true;
+    }
+
+    // Determine if value is below threshold
+    private bool WithinThreshold(double value, double threshold)
+    {
+        return Mathf.Abs((float)value) <= threshold;
     }
 }
 
