@@ -4,8 +4,9 @@ using UnityEngine;
 
 public class CameraSetup : MonoBehaviour
 {
-    public Camera cam;
-    // Start is called before the first frame update
+    public Camera cam; //This is the reference to the camera that is being set up. The camera object needs to be selected in this variable on the Unity project
+
+    // Start is called before the first frame update, we have some preliminary variables for testing purposes here
     void Start()
     {
         cam.usePhysicalProperties = true; //physcial camera        
@@ -15,18 +16,20 @@ public class CameraSetup : MonoBehaviour
         cam.sensorSize = new Vector2(16f, 9f); //aspect ratio
     }
 
+    //These next 4 booleans specifiy if the camera is currently zooming or panning on a given axis
     private bool zooming = false;
     private bool panX = false;
     private bool panY = false;
     private bool panZ = false;
-
+    
+    //These next 4 booleans specify the direction the camera will zoom or pan if the previous booleans were set to true
     private bool zoomDir = false;
     private bool panXDir = false;
     private bool panYDir = false;
     private bool panZDir = false;
 
-    public float zoomSensitivity = 0.01f; //focal length per frame
-    public float panSensitivity = 0.05f; //vector angle per frame
+    public float zoomSensitivity = 0.01f; //change in focal length per frame
+    public float panSensitivity = 0.05f; //change in vector angle per frame
 
     // Update is called once per frame
     void Update()
@@ -66,7 +69,7 @@ public class CameraSetup : MonoBehaviour
         }
         if (panZ)
         {
-            if (panZDir) //true for clockwise, increase Z value
+            if (panZDir) //true for clockwise, decrease Z value
             {
                 Vector3 newAngle = new Vector3(cam.transform.eulerAngles.x, cam.transform.eulerAngles.y, cam.transform.eulerAngles.z - panSensitivity);
                 cam.transform.eulerAngles = newAngle;
@@ -79,7 +82,7 @@ public class CameraSetup : MonoBehaviour
         }
     }
 
-    // Starts or stops zooming in the given direction
+    // The next 4 methods are just public ways to set the private variables for zooming and panning
     public void zoomControl(bool running, bool direction)
     {
         zooming = running;
@@ -104,11 +107,12 @@ public class CameraSetup : MonoBehaviour
         panZDir = direction;
     }
 
-    // takes in an aruco ID and pans x and y accordingly
+    // takes in an aruco ID and pans x and y until the marker at row 2 col 2 (center one) is visible on the board
+    //Once the center marker is visible on the board, the other scripts in the project align itto the center using the physical markers
     public void centerShotgun(int id)
     {
         //convert id to 0 based first, starting ID in the shotgun marker matrix is 4
-        id -=4;
+        id -= 4;
         int row = id / 5; //5x5 matrix starting at top left and going down
         int col = id % 5;
 
