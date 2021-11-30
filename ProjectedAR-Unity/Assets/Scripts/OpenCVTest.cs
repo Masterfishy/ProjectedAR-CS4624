@@ -3,58 +3,59 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using UnityEngine;
 
-// Good azure camera expoure: 16670, lights at 2 dots
+// Good azure camera expoure: 16670, lights at 2 dots in the perform studio if lighting becomes an issue.
 
 public class OpenCVTest : MonoBehaviour
 {
-    public int port = 0;
+    public int capturePort = 0;
     public CameraSetup cameraCtrl;
+
     public double panThreshold = 0.0;
     public double zoomThreshold = 0.0;
 
-    private bool _ready = false;
-    private bool _finishedCenteringShotgun = false;
-    private bool _finishedCentering = false;
+    private bool ready = false;
+    private bool finishedCenteringScatter = false;
+    private bool finishedCentering = false;
     private bool doPan = true;
 
     // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
         CaptureCamera();
     }
 
     // Update is called once per frame
-    void Update()
+    private void Update()
     {
-        if (!_ready)
+        if (!ready)
             return;
 
         // Detect markers and draw on borders
         OpenCVInterop.Detect();
 
-        #region
-        ///////////////////////////////
-        // Center the shotgun spread //
-        ///////////////////////////////
-        
-        if (!_finishedCenteringShotgun)
+        #region Scatter Board
+        //////////////////////////////
+        // Center the scatter board //
+        //////////////////////////////
+
+        if (!finishedCenteringScatter)
         {
             int seenId = OpenCVInterop.GetSeenId();
 
             cameraCtrl.centerShotgun(seenId);
             cameraCtrl.panSensitivity = 0.05f;
 
-            _finishedCenteringShotgun = seenId == 16;
+            finishedCenteringScatter = seenId == 16;
             return;
         }
         #endregion
 
-        #region
-        //////////////////
-        // Pan marker16 //
-        //////////////////
+        #region Panning and Zooming
+        ////////////////////////////
+        // Pan and zoom marker 16 //
+        ////////////////////////////
 
-        if (!_finishedCentering)
+        if (!finishedCentering)
         {
             double xRes = OpenCVInterop.xOffset();
             double yRes = OpenCVInterop.yOffset();
@@ -62,7 +63,9 @@ public class OpenCVTest : MonoBehaviour
 
             if (doPan)
             {
-                Debug.Log("Pan pls");
+                // Pan maker 16 towards the center of the calibration board.
+
+                Debug.Log("\rPanning...");
 
                 float distance = Mathf.Sqrt((float)(xRes * xRes + yRes * yRes));
                 if(distance < 10)
@@ -70,7 +73,7 @@ public class OpenCVTest : MonoBehaviour
                     cameraCtrl.panSensitivity = 0.01f;
                 }
 
-                // If xRes is negative, marker 0 is right of marker 3
+                // If xRes is greater than the threshold, marker 16 is right of the center
                 if (xRes > panThreshold)
                 {
                     // Go left
@@ -88,7 +91,7 @@ public class OpenCVTest : MonoBehaviour
                     cameraCtrl.panXControl(false, false);
                 }
                
-                // If yRes is negative, marker 1 is below marker 3
+                // If yRes is greater than the threshold, marker 16 is below the center
                 if (yRes > panThreshold)
                 {
                     // Go up
@@ -106,18 +109,20 @@ public class OpenCVTest : MonoBehaviour
                     cameraCtrl.panYControl(false, false);
                 }
 
+                // Stop panning if both xRes and yRes are within the threshold
                 doPan = !(WithinThreshold(xRes, panThreshold) && WithinThreshold(yRes, panThreshold));
             }
 
             if (!doPan)
             {
-                Debug.Log("Zoom pls");
+                Debug.Log("\rZooming...");
 
                 if(Mathf.Abs((float)scaleDif) < 2)
                 {
                     cameraCtrl.zoomSensitivity = 0.01f;
                 }
 
+                // If scaleDif is greater than the threshold, marker 16 is too small
                 if (scaleDif > zoomThreshold)
                 {
                     // Zoom in
@@ -134,42 +139,51 @@ public class OpenCVTest : MonoBehaviour
                     cameraCtrl.zoomControl(false, false);
                 }
 
-                Debug.Log("Scale Diff: " + scaleDif);
+                Debug.Log("Scale Difference: " + scaleDif);
+                
+                // Stop zoomming if scaleDif is within the threshold
                 doPan = WithinThreshold(scaleDif, zoomThreshold);
             }
 
-            _finishedCentering = WithinThreshold(scaleDif, zoomThreshold) && WithinThreshold(xRes, panThreshold) && WithinThreshold(yRes, panThreshold);
+            // Finish panning and zooming if all values are within the desired thresholds
+            finishedCentering = WithinThreshold(scaleDif, zoomThreshold) && WithinThreshold(xRes, panThreshold) && WithinThreshold(yRes, panThreshold);
         }
-        else
+        else // Finished calibrating
         {
-            Debug.Log("Yuh, calibrated");
+            Debug.Log("Calibrated");
         }
         #endregion
     }
 
-    void OnApplicationQuit()
+    // Release the camera when the game ends.
+    private void OnApplicationQuit()
     {
-        if (_ready)
+        if (ready)
         {
             OpenCVInterop.Close();
         }
     }
 
-    void OnEnable()
+    // Capture the camera when this script is enabled.
+    private void OnEnable()
     {
-        if (!_ready) //add check to see if camera is open by another application, if yes, return error to make sure unity doesn't crashf
+        if (!ready)
         {
             CaptureCamera();
         }
+
+        finishedCenteringScatter = false;
+        finishedCentering = false;
     }
 
-    void OnDisable()
+    // Release the camera when this script is disabled.
+    private void OnDisable()
     {
-        if (_ready)
+        if (ready)
         {
             OpenCVInterop.Close();
 
-            _ready = false;
+            ready = false;
         }
 
         cameraCtrl.panXControl(false, false);
@@ -177,19 +191,20 @@ public class OpenCVTest : MonoBehaviour
         cameraCtrl.zoomControl(false, false);
     }
 
+    // Capture the camera so that OpenCV functions can work.
     private void CaptureCamera()
     {
-        int result = OpenCVInterop.Init(ref port);
+        int result = OpenCVInterop.Init(ref capturePort);
         if (result == -1)
         {
             Debug.LogWarningFormat("[{0}] Failed to open the camera", GetType());
             return;
         }
 
-        _ready = true;
+        ready = true;
     }
 
-    // Determine if value is below threshold
+    // Determine if value is below the threshold
     private bool WithinThreshold(double value, double threshold)
     {
         return Mathf.Abs((float)value) <= threshold;
@@ -213,12 +228,6 @@ internal static class OpenCVInterop
 
     [DllImport("CalibrationCamera")]
     internal static extern double yOffset();
-
-    [DllImport("CalibrationCamera")]
-    internal static extern double TopCornerOffset();
-
-    [DllImport("CalibrationCamera")]
-    internal static extern double BotCornerOffset();
 
     [DllImport("CalibrationCamera")]
     internal static extern int GetSeenId();

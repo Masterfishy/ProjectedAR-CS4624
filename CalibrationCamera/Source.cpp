@@ -17,8 +17,9 @@ cv::Point2f findArucoCenter(std::vector<cv::Point2f> marker);
 // Static variables
 cv::VideoCapture _capture;
 cv::Ptr<cv::aruco::Dictionary> _dictionary = cv::aruco::getPredefinedDictionary(cv::aruco::DICT_7X7_50);
-int marker = 16;
+int _marker = 16;
 
+// The main function is used for debugging.
 int main()
 {
 	try {
@@ -91,12 +92,21 @@ int main()
 	}
 }
 
+/**
+ * Calculates the euclidean distance between two coordiantes.
+ */
 double calculateDist(double x1, double y1, double x2, double y2)
 {
 	double dist = sqrt(pow((x2 - x1), 2.0) + pow((y2 - y1), 2.0));
 	return dist;
 }
 
+
+/**
+ * Calculates the center point of an ArUco marker based in pixels.
+ * 
+ * @return An OpenCV point for the center.
+ */
 cv::Point2f findArucoCenter(std::vector<cv::Point2f> marker)
 {
 	cv::Point2f	center(0, 0);
@@ -111,11 +121,27 @@ cv::Point2f findArucoCenter(std::vector<cv::Point2f> marker)
 	return center;
 }
 
+/**
+ * Calculates the midpoint between two points.
+ *
+ * @return An OpenCV point for the midpoint. 
+ */
 cv::Point2f findMidpoint(cv::Point2f p1, cv::Point2f p2)
 {
 	return (p1 + p2) * 0.5;
 }
 
+/**
+ * Opens the camera located at the capture port for use with future OpenCV
+ * functions.
+ * 
+ * This function MUST be called before calling other OpenCV functions.
+ * 
+ * @param capturePort The file descriptor for the camera input. 
+						Starts count at 0.
+ * @return 0 on success, 1 if an exception is thrown, 
+ *			2 if the desired capture port could not be opened.
+ */
 extern "C" int __declspec(dllexport) __stdcall Init(int& capturePort)
 {
 	try {
@@ -131,11 +157,19 @@ extern "C" int __declspec(dllexport) __stdcall Init(int& capturePort)
 	return 0;
 }
 
+/**
+ * Releases the capture camera port.
+ * 
+ * Should be done to close the file descriptor.
+ */
 extern "C" void __declspec(dllexport) __stdcall  Close()
 {
 	_capture.release();
 }
 
+/**
+ * Detects which markers are seen and draws them to the output image.
+ */
 extern "C" void __declspec(dllexport) __stdcall Detect()
 {
 	_capture.grab();
@@ -194,111 +228,11 @@ extern "C" void __declspec(dllexport) __stdcall Detect()
 	cv::imshow("out", imageCopy);
 }
 
-extern "C" double __declspec(dllexport) __stdcall xDistance()
-{
-	_capture.grab();
-
-	cv::Mat image, imageCopy;
-	_capture.retrieve(image);
-	image.copyTo(imageCopy);
-
-	std::vector<int> ids;
-	std::vector<std::vector<cv::Point2f>> corners;
-	cv::aruco::detectMarkers(image, _dictionary, corners, ids);
-
-	std::vector<std::vector<cv::Point2f>> sortedCorners{
-		std::vector<cv::Point2f>(4),
-		std::vector<cv::Point2f>(4),
-		std::vector<cv::Point2f>(4),
-		std::vector<cv::Point2f>(4)
-	};
-
-	bool sees0 = false, sees1 = false, sees2 = false, sees3 = false;
-
-	for (int i = 0; i < corners.size(); i++) {
-		if (ids[i] == 0) {
-			sortedCorners[0] = corners[i];
-			sees0 = true;
-		}
-
-		if (ids[i] == 1) {
-			sortedCorners[1] = corners[i];
-			sees1 = true;
-		}
-
-		if (ids[i] == 2) {
-			sortedCorners[2] = corners[i];
-			sees2 = true;
-		}
-
-		if (ids[i] == 3) {
-			sortedCorners[3] = corners[i];
-			sees3 = true;
-		}
-	}
-
-	if (sees0 && sees3)
-	{
-		return (double)sortedCorners[3][1].x - (double)sortedCorners[0][1].x;
-	}
-
-	return 0;
-}
-
-extern "C" double __declspec(dllexport) __stdcall yDistance()
-{
-	_capture.grab();
-
-	cv::Mat image, imageCopy;
-	_capture.retrieve(image);
-	image.copyTo(imageCopy);
-
-	std::vector<int> ids;
-	std::vector<std::vector<cv::Point2f>> corners;
-	cv::aruco::detectMarkers(image, _dictionary, corners, ids);
-
-	std::vector<std::vector<cv::Point2f>> sortedCorners{
-		std::vector<cv::Point2f>(4),
-		std::vector<cv::Point2f>(4),
-		std::vector<cv::Point2f>(4),
-		std::vector<cv::Point2f>(4)
-	};
-
-	bool sees0 = false, sees1 = false, sees2 = false, sees3 = false;
-
-	for (int i = 0; i < corners.size(); i++) {
-		if (ids[i] == 0) {
-			sortedCorners[0] = corners[i];
-			sees0 = true;
-		}
-
-		if (ids[i] == 1) {
-			sortedCorners[1] = corners[i];
-			sees1 = true;
-		}
-
-		if (ids[i] == 2) {
-			sortedCorners[2] = corners[i];
-			sees2 = true;
-		}
-
-		if (ids[i] == 3) {
-			sortedCorners[3] = corners[i];
-			sees3 = true;
-		}
-	}
-
-	if (sees1 && sees3)
-	{
-		return (double)sortedCorners[3][2].y - (double)sortedCorners[1][2].y;
-	}
-
-	return 0;
-}
-
 /**
- * Find the x offset of the center of ArUco marker 16 from the midpoint of the
- * line between ArUco marker 0 and 1.
+ * Calculates the x offset of the center of ArUco marker 16 from the midpoint 
+ * of the line between ArUco marker 0 and 1.
+ * 
+ * @return The offset in pixel units.
  */
 extern "C" double __declspec(dllexport) __stdcall xOffset()
 {
@@ -322,6 +256,7 @@ extern "C" double __declspec(dllexport) __stdcall xOffset()
 		
 		if (itr0 != ids.end() && itr1 != ids.end() && itr16 != ids.end())
 		{
+			// Locate the corners of the markers
 			int indexOfMarker0 =  itr0 - ids.begin();
 			int indexOfMarker1 =  itr1 - ids.begin();
 			int indexOfMarker16 = itr16 - ids.begin();
@@ -330,19 +265,25 @@ extern "C" double __declspec(dllexport) __stdcall xOffset()
 			std::vector<cv::Point2f> marker1 =  corners[indexOfMarker1];
 			std::vector<cv::Point2f> marker16 = corners[indexOfMarker16];
 
+			// Find the midpoint between marker0 (bottom right) and marker1 (top left)
 			cv::Point2f midpoint = findMidpoint(marker0[0], marker1[2]);
+
+			// Find the center of marker16
 			cv::Point2f center = findArucoCenter(marker16);
 
+			// Positive means marker16 is right of the midpoint
 			return (double)center.x - (double)midpoint.x;
 		}
 	}
 	
-	return 1;
+	return 0;
 }
 
 /**
  * Find the y offset of the center of ArUco marker 16 from the midpoint of the
  * line between ArUco marker 0 and 1.
+ *  
+ * @return The offset in pixel units.
  */
 extern "C" double __declspec(dllexport) __stdcall yOffset()
 {
@@ -366,6 +307,7 @@ extern "C" double __declspec(dllexport) __stdcall yOffset()
 
 		if (itr0 != ids.end() && itr1 != ids.end() && itr16 != ids.end())
 		{
+			// Locate the corners of the markers
 			int indexOfMarker0 = itr0 - ids.begin();
 			int indexOfMarker1 = itr1 - ids.begin();
 			int indexOfMarker16 = itr16 - ids.begin();
@@ -374,16 +316,26 @@ extern "C" double __declspec(dllexport) __stdcall yOffset()
 			std::vector<cv::Point2f> marker1 = corners[indexOfMarker1];
 			std::vector<cv::Point2f> marker16 = corners[indexOfMarker16];
 
+ 			// Find the midpoint between marker 0 (bottom right) and marker 1 (top left)
 			cv::Point2f midpoint = findMidpoint(marker0[0], marker1[2]);
+
+			// Find the center of marker 16
 			cv::Point2f center = findArucoCenter(marker16);
 
+			// Positive means marker 16 is below of the midpoint
 			return (double)center.y - (double)midpoint.y;
 		}
 	}
 
-	return 1;
+	return 0;
 }
 
+/**
+ * Calculate the difference in scale of marker 16 and lines from marker0 and 
+ * marker1.
+ * 
+ * @return The scale difference.
+ */
 extern "C" double __declspec(dllexport) __stdcall ScaleDifference()
 {
 	_capture.grab();
@@ -406,6 +358,7 @@ extern "C" double __declspec(dllexport) __stdcall ScaleDifference()
 
 		if (itr0 != ids.end() && itr1 != ids.end() && itr16 != ids.end())
 		{
+			// Locate the corners of the markers
 			int indexOfMarker0 = itr0 - ids.begin();
 			int indexOfMarker1 = itr1 - ids.begin();
 			int indexOfMarker16 = itr16 - ids.begin();
@@ -414,6 +367,7 @@ extern "C" double __declspec(dllexport) __stdcall ScaleDifference()
 			std::vector<cv::Point2f> marker1 = corners[indexOfMarker1];
 			std::vector<cv::Point2f> marker16 = corners[indexOfMarker16];
 
+			// Use the line from the top right corners and the line from bottom left corners of marker 0 and 1 to determine scale.
 			cv::Point2f topMidpoint = findMidpoint(marker0[1], marker1[1]);
 			cv::Point2f botMidpoint = findMidpoint(marker0[3], marker1[3]);
 
@@ -423,6 +377,7 @@ extern "C" double __declspec(dllexport) __stdcall ScaleDifference()
 			// Distance between the top right and bottom left corners of marker 16
 			double virtualDistance = calculateDist(marker16[1].x, marker16[1].y, marker16[3].x, marker16[3].y);
 
+			// Positive if marker 16 is smaller
 			return physicalDistance - virtualDistance;
 		}
 	}
@@ -430,6 +385,11 @@ extern "C" double __declspec(dllexport) __stdcall ScaleDifference()
 	return 0;
 }
 
+/**
+ * Determine which marker is seen.
+ * 
+ * @return The id of the seen marker.
+ */
 extern "C" int __declspec(dllexport) __stdcall GetSeenId()
 {
 	_capture.grab();
@@ -442,20 +402,24 @@ extern "C" int __declspec(dllexport) __stdcall GetSeenId()
 	std::vector<std::vector<cv::Point2f>> corners;
 	cv::aruco::detectMarkers(image, _dictionary, corners, ids);
 
-	int min = 29; //shotgun markers go from 4 to 28
+	int min = 29; //scatter markers go from 4 to 28
 	for (const auto id : ids)
 	{
 		if (id >= 4 && id < min) {
 			min = id;
 		}
+
 		if (id == 16) {
 			return 16;
 		}
 	}
+
 	if (min == 29) { //didn't find any markers
-		return marker;
+		return _marker;
 	}
-	marker = min;
+
+	_marker = min;
+	
 	return min;
 }
 
