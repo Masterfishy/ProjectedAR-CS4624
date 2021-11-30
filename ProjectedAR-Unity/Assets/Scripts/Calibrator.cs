@@ -65,7 +65,7 @@ public class Calibrator : MonoBehaviour
             {
                 // Pan maker 16 towards the center of the calibration board.
 
-                Debug.Log("\rPanning...");
+                Debug.Log("Panning...");
 
                 float distance = Mathf.Sqrt((float)(xRes * xRes + yRes * yRes));
                 if (distance < 10)
@@ -115,7 +115,7 @@ public class Calibrator : MonoBehaviour
 
             if (!doPan)
             {
-                Debug.Log("\rZooming...");
+                Debug.Log("Zooming...");
 
                 if (Mathf.Abs((float)scaleDif) < 2)
                 {

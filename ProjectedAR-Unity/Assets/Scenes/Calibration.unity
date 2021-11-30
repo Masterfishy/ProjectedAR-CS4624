@@ -257,9 +257,9 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 1005940506}
-  - {fileID: 1358146382}
   - {fileID: 952605947}
+  - {fileID: 1358146382}
+  - {fileID: 1005940506}
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -321,11 +321,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 607364523}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5663a75986789ee4d97e0120a181f023, type: 3}
+  m_Script: {fileID: 11500000, guid: ac39e455c4d176f4dbb20ca3989b7e45, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   capturePort: 0
-  cameraCtrl: {fileID: 607364527}
+  cameraCtrl: {fileID: 0}
   panThreshold: 0
   zoomThreshold: 0.3
 --- !u!114 &607364527
@@ -492,7 +492,7 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: 21523bf67cbdf3d428e90d9d052d2126,
         type: 3}
       propertyPath: m_RootOrder
-      value: 2
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 21523bf67cbdf3d428e90d9d052d2126,
         type: 3}
@@ -688,7 +688,7 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: a9ebc15daf6e2fc47b602872078ffc68,
         type: 3}
       propertyPath: m_RootOrder
-      value: 0
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: a9ebc15daf6e2fc47b602872078ffc68,
         type: 3}
