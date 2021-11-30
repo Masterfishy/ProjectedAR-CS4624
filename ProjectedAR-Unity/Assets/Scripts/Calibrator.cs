@@ -5,7 +5,7 @@ using UnityEngine;
 
 // Good azure camera expoure: 16670, lights at 2 dots in the perform studio if lighting becomes an issue.
 
-public class OpenCVTest : MonoBehaviour
+public class Calibrator : MonoBehaviour
 {
     public int capturePort = 0;
     public CameraSetup cameraCtrl;
@@ -68,7 +68,7 @@ public class OpenCVTest : MonoBehaviour
                 Debug.Log("\rPanning...");
 
                 float distance = Mathf.Sqrt((float)(xRes * xRes + yRes * yRes));
-                if(distance < 10)
+                if (distance < 10)
                 {
                     cameraCtrl.panSensitivity = 0.01f;
                 }
@@ -90,7 +90,7 @@ public class OpenCVTest : MonoBehaviour
                     Debug.Log("Stop panning X");
                     cameraCtrl.panXControl(false, false);
                 }
-               
+
                 // If yRes is greater than the threshold, marker 16 is below the center
                 if (yRes > panThreshold)
                 {
@@ -117,7 +117,7 @@ public class OpenCVTest : MonoBehaviour
             {
                 Debug.Log("\rZooming...");
 
-                if(Mathf.Abs((float)scaleDif) < 2)
+                if (Mathf.Abs((float)scaleDif) < 2)
                 {
                     cameraCtrl.zoomSensitivity = 0.01f;
                 }
@@ -140,7 +140,7 @@ public class OpenCVTest : MonoBehaviour
                 }
 
                 Debug.Log("Scale Difference: " + scaleDif);
-                
+
                 // Stop zoomming if scaleDif is within the threshold
                 doPan = WithinThreshold(scaleDif, zoomThreshold);
             }
