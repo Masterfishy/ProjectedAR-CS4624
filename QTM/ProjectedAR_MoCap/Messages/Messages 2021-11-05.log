@@ -1,0 +1,29 @@
+1	10:57:20	Realtime started	
+1	11:11:34	Disconnected	
+1	11:11:37	Realtime started	
+1	11:29:25	Disconnected	
+1	11:29:55	Realtime started	
+1	11:32:04	Calibration started	
+1	11:32:04	Calibration finished after 0.0498 seconds	
+1	11:32:04	File created	
+1	11:32:05	File saved as C:\Users\icat\Desktop\Projected AR - CS4624\QTM\ProjectedAR_MoCap\Calibrations\20211105_113037_FAILED.qca	
+1	11:32:18	File closed	
+1	11:32:21	Realtime started	
+1	11:35:44	Disconnected	
+1	11:36:27	Realtime started	
+1	11:50:56	Disconnected	
+1	11:50:56	Error(s) when waiting for realtime frame. Double-click for more information	Error(s) when waiting for realtime frame:  001 - code 09 - camera 02 (192.168.253.6) : The camera has stopped communicating. 002 - code 09 - camera 03 (192.168.253.10) : The camera has stopped communicating. 003 - code 09 - camera 04 (192.168.253.17) : The camera has stopped communicating. 004 - code 09 - camera 05 (192.168.253.8) : The camera has stopped communicating. 005 - code 09 - camera 06 (192.168.253.5) : The camera has stopped communicating. 006 - code 09 - camera 07 (192.168.253.4) : The camera has stopped communicating. 007 - code 09 - camera 08 (192.168.253.13) : The camera has stopped communicating. 008 - code 09 - camera 09 (192.168.253.3) : The camera has stopped communicating. 009 - code 09 - camera 10 (192.168.253.9) : The camera has stopped communicating.
+1	11:58:05	Realtime started	
+1	12:21:38	Disconnected	
+1	12:24:54	Realtime started	
+1	12:39:40	Disconnected	
+1	12:39:48	Realtime started	
+1	12:42:11	Calibration started	
+1	12:42:17	Calibration finished after 6.5192 seconds	
+1	12:42:18	File created	
+1	12:42:19	File saved as C:\Users\icat\Desktop\Projected AR - CS4624\QTM\ProjectedAR_MoCap\Calibrations\20211105_124043.qca	
+1	12:42:26	File closed	
+1	12:42:31	Realtime started	
+1	12:50:13	Disconnected	
+1	12:53:07	Realtime started	
+1	14:01:21	Disconnected	

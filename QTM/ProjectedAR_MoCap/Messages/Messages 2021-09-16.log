@@ -1,0 +1,20 @@
+1	16:08:04	Realtime started	
+1	16:08:27	Disconnected	
+1	16:32:42	Realtime started	
+1	16:33:45	Recalibration recommended	Cameras 1 and 11 have very few contributions to the 3D reconstruction.
+1	16:33:45	1 model failed to apply	1 model failed to apply.  Note: Partial success, or failure to identify, usually indicates that the model needs more training.  Correct the identification by hand and then add the fully identified file to the AIM model. Use "Add to existing model(s)" to improve AIM performance.    Rigid body identification results:  0 successful  7 failed  1 skipped (already identified, or part of an AIM model)
+1	16:33:46	File created	
+1	16:34:27	Rigid body: optoma1 added.	The new body definition was added both to the file and to the Project Options.
+1	16:34:27	Rigid body identification results	Rigid body identification results:  0 successful  7 failed  2 skipped (already identified, or part of an AIM model)
+1	16:35:02	File closed	
+1	16:35:03	Realtime started	
+1	17:13:19	Disconnected	
+1	17:14:56	Realtime started	
+1	17:33:49	Recalibration recommended	Camera 11 has very few contributions to the 3D reconstruction.
+1	17:33:49	1 model failed to apply	1 model failed to apply.  Note: Partial success, or failure to identify, usually indicates that the model needs more training.  Correct the identification by hand and then add the fully identified file to the AIM model. Use "Add to existing model(s)" to improve AIM performance.    Rigid body identification results:  2 successful  7 failed  1 skipped (already identified, or part of an AIM model)
+1	17:33:49	File created	
+1	17:34:39	Rigid body: 12in-box added.	The new body definition was added both to the file and to the Project Options.
+1	17:34:39	Rigid body identification results	Rigid body identification results:  0 successful  7 failed  3 skipped (already identified, or part of an AIM model)
+1	17:37:00	File closed	
+1	17:37:01	Realtime started	
+1	17:57:09	Disconnected	

@@ -1,0 +1,14 @@
+1	11:32:14	Realtime started	
+1	11:45:39	Disconnected	
+1	11:46:52	Realtime started	
+1	12:12:08	Disconnected	
+1	12:31:29	Realtime started	
+1	12:32:58	1 model failed to apply	1 model failed to apply.  Note: Partial success, or failure to identify, usually indicates that the model needs more training.  Correct the identification by hand and then add the fully identified file to the AIM model. Use "Add to existing model(s)" to improve AIM performance.    Rigid body identification results:  4 successful  7 failed  1 skipped (already identified, or part of an AIM model)
+1	12:32:58	File created	
+1	12:33:30	Rigid body: calibrationPanel1 added.	The new body definition was added both to the file and to the Project Options.
+1	12:33:30	Rigid body identification results	Rigid body identification results:  0 successful  7 failed  4 skipped (already identified, or part of an AIM model)
+1	12:33:39	File closed	
+1	12:33:41	Realtime started	
+1	13:12:44	Disconnected	
+1	13:13:03	Realtime started	
+1	13:59:58	Disconnected	
