@@ -42,20 +42,20 @@ int main()
 
 		if (ids.size() > 0)
 		{
-			// See if markers 0, 1, and 16 are being seen
+			// See if markers 0, 1, and 3 are being seen
 			auto itr0 = std::find(ids.begin(), ids.end(), 0);
 			auto itr1 = std::find(ids.begin(), ids.end(), 1);
-			auto itr16 = std::find(ids.begin(), ids.end(), 16);
+			auto itr3 = std::find(ids.begin(), ids.end(), 3);
 
-			if (itr0 != ids.end() && itr1 != ids.end() && itr16 != ids.end())
+			if (itr0 != ids.end() && itr1 != ids.end() && itr3 != ids.end())
 			{
 				int indexOfMarker0 = itr0 - ids.begin();
 				int indexOfMarker1 = itr1 - ids.begin();
-				int indexOfMarker16 = itr16 - ids.begin();
+				int indexOfMarker3 = itr3 - ids.begin();
 
 				std::vector<cv::Point2f> marker0 = corners[indexOfMarker0];
 				std::vector<cv::Point2f> marker1 = corners[indexOfMarker1];
-				std::vector<cv::Point2f> marker16 = corners[indexOfMarker16];
+				std::vector<cv::Point2f> marker3 = corners[indexOfMarker3];
 
 				cv::Point2f topMidpoint = findMidpoint(marker0[1], marker1[1]);
 				cv::Point2f midLineMidpoint = findMidpoint(marker0[0], marker1[2]);
@@ -73,9 +73,9 @@ int main()
 				double physicalDistance = calculateDist(topMidpoint.x, topMidpoint.y, botMidpoint.x, botMidpoint.y);
 
 				// Distance between the top right and bottom left corners of marker 16
-				double virtualDistance = calculateDist(marker16[1].x, marker16[1].y, marker16[3].x, marker16[3].y);
+				double virtualDistance = calculateDist(marker3[1].x, marker3[1].y, marker3[3].x, marker3[3].y);
 
-				std::cout << marker16 << std::endl;
+				std::cout << marker3 << std::endl;
 
 				double diff = physicalDistance - virtualDistance;
 				std::cout << "Phys Dist: " << physicalDistance << "\nVirt Dist: " << virtualDistance << "\nDiff: " << diff << std::endl;
