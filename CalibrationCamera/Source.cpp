@@ -31,7 +31,7 @@ int main()
 	while (_capture.grab())
 	{
 		cv::Mat image, imageCopy;
-		_capture.retrieve(image); 
+		_capture.retrieve(image);
 		image.copyTo(imageCopy);
 
 		std::vector<int> ids;
@@ -81,12 +81,13 @@ int main()
 				std::cout << "Phys Dist: " << physicalDistance << "\nVirt Dist: " << virtualDistance << "\nDiff: " << diff << std::endl;
 			}
 
-		cv::aruco::drawDetectedMarkers(imageCopy, corners, ids);
+			cv::aruco::drawDetectedMarkers(imageCopy, corners, ids);
 
-		cv::imshow("out", imageCopy);
-		char key = (char)cv::waitKey(0);
-		if (key == 20)
-			break;
+			cv::imshow("out", imageCopy);
+			char key = (char)cv::waitKey(0);
+			if (key == 20)
+				break;
+		}
 	}
 }
 
