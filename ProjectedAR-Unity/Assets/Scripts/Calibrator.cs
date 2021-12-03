@@ -18,6 +18,11 @@ public class Calibrator : MonoBehaviour
     private bool finishedCentering = false;
     private bool doPan = true;
 
+    private void Awake()
+    {
+        cameraCtrl = GetComponent<CameraSetup>();
+    }
+
     // Start is called before the first frame update
     private void Start()
     {
